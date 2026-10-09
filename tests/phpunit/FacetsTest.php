@@ -11,7 +11,9 @@ use function HM\FacetBlocks\clean_item_values;
 use function HM\FacetBlocks\collect_items;
 use function HM\FacetBlocks\find_facet;
 use function HM\FacetBlocks\get_selected;
+use function HM\FacetBlocks\has_more;
 use function HM\FacetBlocks\has_results;
+use function HM\FacetBlocks\is_within_limit;
 use function HM\FacetBlocks\item_matches;
 use function HM\FacetBlocks\sanitize_facets;
 
@@ -322,5 +324,63 @@ class FacetsTest extends TestCase {
 		$this->assertTrue( has_results( $items, [ 'industry' => 'retail' ] ) );
 		$this->assertFalse( has_results( $items, [ 'industry' => 'technology' ] ) );
 		$this->assertFalse( has_results( [], [ 'industry' => '' ] ) );
+	}
+
+	/**
+	 * Five items alternating between technology and retail.
+	 */
+	private function alternating_items(): array {
+		return [
+			[ 'industry' => [ 'technology' ] ],
+			[ 'industry' => [ 'retail' ] ],
+			[ 'industry' => [ 'technology' ] ],
+			[ 'industry' => [ 'retail' ] ],
+			[ 'industry' => [ 'technology' ] ],
+		];
+	}
+
+	public function test_every_item_is_within_a_limit_of_zero(): void {
+		$items = $this->alternating_items();
+
+		$this->assertTrue( is_within_limit( $items, 4, [ 'industry' => '' ], 0 ) );
+	}
+
+	public function test_is_within_limit_counts_items_in_order(): void {
+		$items    = $this->alternating_items();
+		$selected = [ 'industry' => '' ];
+
+		$this->assertTrue( is_within_limit( $items, 0, $selected, 2 ) );
+		$this->assertTrue( is_within_limit( $items, 1, $selected, 2 ) );
+		$this->assertFalse( is_within_limit( $items, 2, $selected, 2 ) );
+		$this->assertFalse( is_within_limit( $items, 4, $selected, 2 ) );
+	}
+
+	public function test_is_within_limit_only_counts_matching_items(): void {
+		$items    = $this->alternating_items();
+		$selected = [ 'industry' => 'technology' ];
+
+		// The third item is the second technology item.
+		$this->assertTrue( is_within_limit( $items, 2, $selected, 2 ) );
+		$this->assertFalse( is_within_limit( $items, 4, $selected, 2 ) );
+	}
+
+	public function test_has_more_while_matching_items_are_past_the_limit(): void {
+		$items = $this->alternating_items();
+
+		$this->assertTrue( has_more( $items, [ 'industry' => '' ], 2 ) );
+		$this->assertTrue( has_more( $items, [ 'industry' => '' ], 4 ) );
+		$this->assertFalse( has_more( $items, [ 'industry' => '' ], 5 ) );
+		$this->assertFalse( has_more( $items, [ 'industry' => '' ], 6 ) );
+	}
+
+	public function test_has_more_only_counts_matching_items(): void {
+		$items = $this->alternating_items();
+
+		$this->assertTrue( has_more( $items, [ 'industry' => 'technology' ], 2 ) );
+		$this->assertFalse( has_more( $items, [ 'industry' => 'retail' ], 2 ) );
+	}
+
+	public function test_has_more_is_false_for_a_limit_of_zero(): void {
+		$this->assertFalse( has_more( $this->alternating_items(), [ 'industry' => '' ], 0 ) );
 	}
 }

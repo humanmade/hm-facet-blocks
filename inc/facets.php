@@ -230,3 +230,49 @@ function has_results( array $items, array $selected ): bool {
 
 	return false;
 }
+
+/**
+ * Whether an item is among the first matching items a context shows.
+ *
+ * Counts the matching items before it, in page order. Mirrors
+ * isWithinLimit() in src/utils/matching.js.
+ *
+ * @param array $items    Items from collect_items().
+ * @param int   $index    The item's position in $items.
+ * @param array $selected Selection from get_selected().
+ * @param int   $shown    How many matching items show. Zero shows them all.
+ * @return bool
+ */
+function is_within_limit( array $items, int $index, array $selected, int $shown ): bool {
+	if ( $shown <= 0 ) {
+		return true;
+	}
+
+	$before = array_filter(
+		array_slice( $items, 0, $index ),
+		fn ( array $values ): bool => item_matches( $values, $selected )
+	);
+
+	return count( $before ) < $shown;
+}
+
+/**
+ * Whether matching items are left that a context isn't showing yet.
+ *
+ * @param array $items    Items from collect_items().
+ * @param array $selected Selection from get_selected().
+ * @param int   $shown    How many matching items show. Zero shows them all.
+ * @return bool
+ */
+function has_more( array $items, array $selected, int $shown ): bool {
+	if ( $shown <= 0 ) {
+		return false;
+	}
+
+	$matching = array_filter(
+		$items,
+		fn ( array $values ): bool => item_matches( $values, $selected )
+	);
+
+	return count( $matching ) > $shown;
+}
