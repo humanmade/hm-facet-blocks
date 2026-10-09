@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Facet selection block, which lists the selected option of each facet as a button that removes it.
+- Facet clear block, a button that sets every facet back to all.
+
 ## [0.1.0] - 2026-10-09
 
 ### Added
