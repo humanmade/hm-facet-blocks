@@ -1,7 +1,7 @@
 /**
  * Playwright globalTeardown: shuts down the Playground instance started by
  * global-setup.js. Prefers Symbol.asyncDispose (newer API) with a fallback
- * to server.close() for older @wp-playground/cli versions.
+ * to server.close() for older `@wp-playground/cli` versions.
  */
 module.exports = async () => {
 	const cli = globalThis.__wpPlayground;

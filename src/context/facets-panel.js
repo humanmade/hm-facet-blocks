@@ -24,10 +24,10 @@ const QUERY_PREFIX = 'facet-';
 /**
  * A text field and a button that adds what was typed.
  *
- * @param {Object}   props
- * @param {string}   props.label       Field label.
- * @param {string}   props.buttonLabel Button text.
- * @param {Function} props.onAdd       Receives the trimmed text.
+ * @param {Object}                 props
+ * @param {string}                 props.label       Field label.
+ * @param {string}                 props.buttonLabel Button text.
+ * @param {(text: string) => void} props.onAdd       Receives the trimmed text.
  */
 function AddForm( { label, buttonLabel, onAdd } ) {
 	const [ value, setValue ] = useState( '' );
@@ -78,10 +78,10 @@ function AddForm( { label, buttonLabel, onAdd } ) {
  * Asks what to do with the items that still use a facet or option being
  * removed.
  *
- * @param {Object}   props
- * @param {Object}   props.pending  The removal: `{ label, isOption, uses }`.
- * @param {Function} props.onRemove Receives whether to clear the values from items.
- * @param {Function} props.onCancel Closes the dialog.
+ * @param {Object}                   props
+ * @param {Object}                   props.pending  The removal: `{ label, isOption, uses }`.
+ * @param {(clear: boolean) => void} props.onRemove Receives whether to clear the values from items.
+ * @param {() => void}               props.onCancel Closes the dialog.
  */
 function RemovalDialog( { pending, onRemove, onCancel } ) {
 	const message = pending.isOption
@@ -147,11 +147,11 @@ function RemovalDialog( { pending, onRemove, onCancel } ) {
 /**
  * The facet editor in the context block's sidebar.
  *
- * @param {Object}   props
- * @param {Array}    props.facets      Facet definitions.
- * @param {Array}    props.items       The context's items: `{ clientId, values }`.
- * @param {Function} props.onChange    Receives the new facet definitions.
- * @param {Function} props.updateItems Rewrites every item's values with a callback.
+ * @param {Object}                                          props
+ * @param {Array}                                           props.facets      Facet definitions.
+ * @param {Array}                                           props.items       The context's items: `{ clientId, values }`.
+ * @param {(facets: Array) => void}                         props.onChange    Receives the new facet definitions.
+ * @param {(getValues: (values: Object) => Object) => void} props.updateItems Rewrites every item's values with a callback.
  */
 export default function FacetsPanel( {
 	facets,

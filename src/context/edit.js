@@ -86,7 +86,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	/**
 	 * Rewrites the values of the context's items in one undo step.
 	 *
-	 * @param {Function} getValues Receives an item's values, returns the new ones.
+	 * @param {(values: Object) => Object} getValues Receives an item's values, returns the new ones.
 	 */
 	const updateItems = ( getValues ) => {
 		const { updateBlockAttributes } = registry.dispatch( blockEditorStore );

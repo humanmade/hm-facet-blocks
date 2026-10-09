@@ -19,7 +19,7 @@ function resolvePort() {
 /**
  * Playwright globalSetup: boots a single Playground instance for the whole
  * test run. Writes the server URL to process.env.WP_BASE_URL so all specs
- * (and @wordpress/e2e-test-utils-playwright fixtures) use it automatically.
+ * (and `@wordpress/e2e-test-utils-playwright` fixtures) use it automatically.
  *
  * No-ops when WP_BASE_URL is already set, so an externally-managed Playground
  * (CI matrix server, local `npm run playground:start`) is not double-booted.
