@@ -1,0 +1,11 @@
+/vendor/
+/node_modules/
+/build/
+/composer.lock
+/artifacts/
+/test-results/
+/playwright-report/
+/dist/
+.DS_Store
+*.log
+.phpunit.result.cache

@@ -1,0 +1,36 @@
+{
+	"name": "humanmade/hm-facet-blocks",
+	"description": "Blocks for filtering content already on the page by facets",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"authors": [
+		{
+			"name": "Human Made",
+			"email": "hello@humanmade.com"
+		}
+	],
+	"homepage": "https://github.com/humanmade/hm-facet-blocks",
+	"support": {
+		"issues": "https://github.com/humanmade/hm-facet-blocks/issues",
+		"source": "https://github.com/humanmade/hm-facet-blocks"
+	},
+	"require": {
+		"php": "^8.2",
+		"composer/installers": "^1 || ^2"
+	},
+	"require-dev": {
+		"humanmade/coding-standards": "^2.5",
+		"phpunit/phpunit": "^9.6"
+	},
+	"scripts": {
+		"lint": "phpcs",
+		"format": "phpcbf",
+		"test": "phpunit"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"composer/installers": true
+		}
+	}
+}
