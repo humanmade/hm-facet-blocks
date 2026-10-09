@@ -14,5 +14,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Facet no results block, shown when no item matches.
 - The selection is kept in the URL as `facet-<slug>` parameters, and a linked selection is rendered already filtered by the server.
 - Removing a facet or option that items use asks whether to clear it from those items. Values left on items are ignored on the front end, reported in the editor and can be removed in one step.
+- "Items to show at a time" setting on the Facet context block, and a Facet show more block whose button shows the next batch. The limit counts matching items, so it works with filtering and with a linked selection.
 
 [Unreleased]: https://github.com/humanmade/hm-facet-blocks/commits/main
