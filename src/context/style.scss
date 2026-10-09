@@ -1,0 +1,6 @@
+// A layout class such as `is-layout-flex` sets `display`, which would beat
+// the browser's own `[hidden]` rule and leave a filtered-out item showing.
+.wp-block-hm-facet-blocks-item[hidden],
+.wp-block-hm-facet-blocks-no-results[hidden] {
+	display: none !important;
+}

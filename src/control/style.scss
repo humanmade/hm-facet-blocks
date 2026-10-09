@@ -1,0 +1,39 @@
+// Plain defaults a theme can restyle. Each rule is wrapped in `:where()` so a
+// theme's own selector wins without needing extra specificity.
+:where(.wp-block-hm-facet-blocks-control) {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5em;
+}
+
+:where(.wp-block-hm-facet-blocks-control__options) {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5em;
+}
+
+:where(.wp-block-hm-facet-blocks-control__option) {
+	padding: 0.5em 1em;
+	border: 1px solid currentcolor;
+	border-radius: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+}
+
+:where(.wp-block-hm-facet-blocks-control__option[aria-pressed="true"]) {
+	background: var(--wp--preset--color--contrast, #111);
+	color: var(--wp--preset--color--base, #fff);
+}
+
+:where(.wp-block-hm-facet-blocks-control__select) {
+	padding: 0.5em;
+	font: inherit;
+}
+
+:where(.wp-block-hm-facet-blocks-control__option, .wp-block-hm-facet-blocks-control__select):focus-visible {
+	outline: 2px solid currentcolor;
+	outline-offset: 2px;
+}

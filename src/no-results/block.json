@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "hm-facet-blocks/no-results",
+	"title": "Facet no results",
+	"category": "design",
+	"icon": "dismiss",
+	"description": "Content shown when no facet item matches the selected options.",
+	"keywords": [ "filter", "facet", "empty" ],
+	"textdomain": "hm-facet-blocks",
+	"ancestor": [ "hm-facet-blocks/context" ],
+	"supports": {
+		"html": false,
+		"interactivity": true,
+		"multiple": true,
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"editorScript": "file:./index.js"
+}

@@ -1,0 +1,45 @@
+.hm-facet-blocks-facets {
+	display: grid;
+	gap: 16px;
+}
+
+.hm-facet-blocks-facet {
+	display: grid;
+	gap: 12px;
+	margin: 0;
+	padding: 0 0 16px;
+	border: 0;
+	border-bottom: 1px solid #ddd;
+
+	&__options {
+		display: grid;
+		gap: 8px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		&:empty {
+			display: none;
+		}
+
+		li {
+			margin: 0;
+		}
+	}
+}
+
+// The item block's sidebar. An item is always inside a context block, so
+// this stylesheet is loaded whenever one is.
+.hm-facet-blocks-item-facet {
+	display: grid;
+	gap: 8px;
+	margin: 0 0 16px;
+	padding: 0;
+	border: 0;
+
+	legend {
+		margin-bottom: 8px;
+		padding: 0;
+		font-weight: 600;
+	}
+}
