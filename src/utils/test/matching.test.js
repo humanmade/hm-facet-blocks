@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { hasResults, itemMatches } from '../matching';
 
 describe( 'itemMatches', () => {

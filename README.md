@@ -94,7 +94,7 @@ npm run build
 | `composer lint` | PHPCS with the Human Made standard |
 | `composer test` | PHPUnit, for the matching rules in `inc/facets.php` |
 | `npm run lint:js` and `npm run lint:css` | ESLint and Stylelint |
-| `npm run test:unit` | Jest, for `src/utils` |
+| `npm run test:unit` | Vitest, for `src/utils` |
 | `npm run test:e2e` | Playwright against WordPress Playground |
 | `npm run playground:start` | A Playground site with the plugin active and a demo page |
 
