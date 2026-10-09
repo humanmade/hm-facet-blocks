@@ -1,0 +1,31 @@
+// Plain defaults a theme can restyle. Each rule is wrapped in `:where()` so a
+// theme's own selector wins without needing extra specificity.
+:where(.wp-block-hm-facet-blocks-selection) {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5em;
+}
+
+:where(.wp-block-hm-facet-blocks-selection__option) {
+	padding: 0.5em 1em;
+	border: 1px solid currentcolor;
+	border-radius: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+}
+
+// The mark that says the button removes its option. The second declaration
+// gives it empty alternative text where that is supported, so a screen reader
+// only reads the button's own text.
+:where(.wp-block-hm-facet-blocks-selection__option)::before {
+	content: "\00d7";
+	content: "\00d7" / "";
+	margin-inline-end: 0.5em;
+}
+
+:where(.wp-block-hm-facet-blocks-selection__option):focus-visible {
+	outline: 2px solid currentcolor;
+	outline-offset: 2px;
+}
