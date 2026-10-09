@@ -12,8 +12,9 @@ The items are ordinary blocks you write in the editor. Nothing is queried, so th
 | Facet control (`hm-facet-blocks/control`) | Lets a visitor choose one option of one facet. Shows as buttons or a dropdown. |
 | Facet item (`hm-facet-blocks/item`) | A container for any blocks. Shows or hides depending on what is selected. |
 | Facet no results (`hm-facet-blocks/no-results`) | A container that only shows when no item matches. |
+| Facet show more (`hm-facet-blocks/show-more`) | A button that shows the next batch of items, when the context block limits how many show at a time. |
 
-The control, item and no results blocks can only be inserted inside a context block. Between them and the context you can use any layout blocks, for example Columns with the controls in one column and a Grid of items in the other.
+The control, item, no results and show more blocks can only be inserted inside a context block. Between them and the context you can use any layout blocks, for example Columns with the controls in one column and a Grid of items in the other.
 
 ## Setting it up
 
@@ -29,6 +30,17 @@ The control, item and no results blocks can only be inserted inside a context bl
 - An item matches a facet when the selected option is one of the options ticked on it.
 - With more than one facet in use, an item has to match all of them.
 - An item with nothing ticked for a facet only shows while that facet is on "All".
+
+## Showing a few items at a time
+
+By default every matching item shows. To show them in batches:
+
+1. Select the Facet context block and set "Items to show at a time" in its sidebar, for example 12.
+2. Insert a Facet show more block where the button should go, usually below the items.
+
+The first 12 matching items show, in page order. The button shows the next 12 and hides itself when none are left. Choosing a different option goes back to the first 12.
+
+Every item is still in the page, so the limit does not make the page smaller. How many items a visitor has revealed is not kept in the URL, so a reload or a shared link shows the first batch.
 
 ## The URL
 
@@ -63,13 +75,16 @@ The control has plain default styles, each wrapped in `:where()` so a theme sele
 | `.wp-block-hm-facet-blocks-control__option` | One button |
 | `.wp-block-hm-facet-blocks-control__option[aria-pressed="true"]` | The selected button |
 | `.wp-block-hm-facet-blocks-control__select` | The dropdown |
+| `.wp-block-hm-facet-blocks-show-more__button` | The show more button |
 
 Tabs, pills and similar looks are styles of the buttons display.
+
+The show more button has no styles of its own. It has the `wp-element-button` class, so it takes the theme's button styles.
 
 ## Limits
 
 - A visitor can select one option per facet, not several.
-- There is no paging or "show more". Every item is in the page.
+- There is no paging. Every item is in the page, including the ones a limit hides.
 - Items have to be in the same post content as their context block. An item inside a synced pattern is not supported.
 - Two context blocks on one page that both have a facet with the same slug share its URL parameter.
 

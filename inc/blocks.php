@@ -19,7 +19,14 @@ const STORE = 'hm-facet-blocks';
  */
 const FACETS_CONTEXT = 'hm-facet-blocks/facets';
 
+/**
+ * Block context key an item's position among its context block's items is
+ * passed under. See number_items().
+ */
+const INDEX_CONTEXT = 'hm-facet-blocks/index';
+
 add_action( 'init', __NAMESPACE__ . '\\register_blocks' );
+add_filter( 'render_block_context', __NAMESPACE__ . '\\number_items', 10, 2 );
 
 /**
  * Registers the blocks from the build directory.
@@ -30,6 +37,7 @@ function register_blocks(): void {
 		'control'    => 'render_control',
 		'item'       => 'render_item',
 		'no-results' => 'render_no_results',
+		'show-more'  => 'render_show_more',
 	];
 
 	foreach ( $blocks as $directory => $callback ) {
@@ -38,6 +46,43 @@ function register_blocks(): void {
 			[ 'render_callback' => __NAMESPACE__ . '\\' . $callback ]
 		);
 	}
+}
+
+/**
+ * How many items each context block being rendered has numbered so far, with
+ * the innermost context block last.
+ *
+ * @return int[]
+ */
+function &item_counters(): array {
+	static $counters = [];
+
+	return $counters;
+}
+
+/**
+ * Gives each item its position among the items of its context block, which
+ * the limit needs to count the matching items before it.
+ *
+ * WordPress runs this filter for each block just before rendering it, in page
+ * order. A context block starts a count that render_context() ends, so the
+ * items of a nested context block are counted separately.
+ *
+ * @param array $context      Block context.
+ * @param array $parsed_block The block about to render.
+ * @return array
+ */
+function number_items( $context, $parsed_block ) {
+	$counters = &item_counters();
+	$name     = $parsed_block['blockName'] ?? null;
+
+	if ( $name === CONTEXT_BLOCK ) {
+		$counters[] = 0;
+	} elseif ( $name === ITEM_BLOCK && $counters !== [] ) {
+		$context[ INDEX_CONTEXT ] = $counters[ array_key_last( $counters ) ]++;
+	}
+
+	return $context;
 }
 
 /**
@@ -79,9 +124,11 @@ function register_state(): void {
 		STORE,
 		[
 			'isItemHidden'     => function (): bool {
-				$context = wp_interactivity_get_context();
+				$context  = wp_interactivity_get_context();
+				$selected = $context['selected'] ?? [];
 
-				return ! item_matches( $context['item'] ?? [], $context['selected'] ?? [] );
+				return ! item_matches( $context['item'] ?? [], $selected )
+					|| ! is_within_limit( $context['items'] ?? [], $context['index'] ?? 0, $selected, $context['shown'] ?? 0 );
 			},
 			'isOptionSelected' => function (): bool {
 				$context = wp_interactivity_get_context();
@@ -92,6 +139,11 @@ function register_state(): void {
 				$context = wp_interactivity_get_context();
 
 				return has_results( $context['items'] ?? [], $context['selected'] ?? [] );
+			},
+			'hasMore'          => function (): bool {
+				$context = wp_interactivity_get_context();
+
+				return has_more( $context['items'] ?? [], $context['selected'] ?? [], $context['shown'] ?? 0 );
 			},
 		]
 	);
@@ -108,6 +160,10 @@ function register_state(): void {
  */
 function render_context( array $attributes, string $content, WP_Block $block ): string {
 	$facets = sanitize_facets( $attributes['facets'] ?? [] );
+	$limit  = max( 0, (int) ( $attributes['limit'] ?? 0 ) );
+
+	// Ends the count number_items() started for this block.
+	array_pop( item_counters() );
 
 	register_state();
 
@@ -122,6 +178,9 @@ function render_context( array $attributes, string $content, WP_Block $block ): 
 					fn ( array $values ): object => (object) $values,
 					collect_items( $block->parsed_block['innerBlocks'] ?? [], $facets )
 				),
+				'limit'    => $limit,
+				// How many matching items show. The show more button raises it.
+				'shown'    => $limit,
 			]
 		),
 		$content
@@ -130,6 +189,9 @@ function render_context( array $attributes, string $content, WP_Block $block ): 
 
 /**
  * Renders an item, hidden when it doesn't match the current selection.
+ *
+ * The `hidden` directive also hides it when it is past its context block's
+ * limit, which depends on the items before it.
  *
  * @param array    $attributes Block attributes.
  * @param string   $content    Rendered inner blocks.
@@ -143,7 +205,12 @@ function render_item( array $attributes, string $content, WP_Block $block ): str
 	return sprintf(
 		'<div %1$s %2$s%3$s>%4$s</div>',
 		get_block_wrapper_attributes( [ 'data-wp-bind--hidden' => 'state.isItemHidden' ] ),
-		wp_interactivity_data_wp_context( [ 'item' => (object) $values ] ),
+		wp_interactivity_data_wp_context(
+			[
+				'item'  => (object) $values,
+				'index' => (int) ( $block->context[ INDEX_CONTEXT ] ?? 0 ),
+			]
+		),
 		item_matches( $values, get_request_selection( $facets ) ) ? '' : ' hidden',
 		$content
 	);
@@ -170,6 +237,26 @@ function render_no_results( array $attributes, string $content ): string {
 			]
 		),
 		$content
+	);
+}
+
+/**
+ * Renders the show more button, shown while matching items are past the
+ * context block's limit.
+ *
+ * It starts hidden for the same reason the no results block does.
+ *
+ * @param array $attributes Block attributes.
+ * @return string
+ */
+function render_show_more( array $attributes ): string {
+	$label = (string) ( $attributes['label'] ?? '' );
+	$label = $label !== '' ? $label : __( 'Show more', 'hm-facet-blocks' );
+
+	return sprintf(
+		'<div %1$s hidden><button type="button" class="wp-block-hm-facet-blocks-show-more__button wp-element-button" data-wp-on--click="actions.showMore">%2$s</button></div>',
+		get_block_wrapper_attributes( [ 'data-wp-bind--hidden' => '!state.hasMore' ] ),
+		esc_html( $label )
 	);
 }
 

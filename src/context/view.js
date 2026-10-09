@@ -1,9 +1,18 @@
-import { getContext, store } from '@wordpress/interactivity';
+import { getContext, getElement, store } from '@wordpress/interactivity';
 
-import { hasResults, itemMatches } from '../utils/matching';
+import {
+	hasMore,
+	hasResults,
+	indexAtRank,
+	isWithinLimit,
+	itemMatches,
+} from '../utils/matching';
 
 // Matches QUERY_PREFIX in inc/facets.php.
 const QUERY_PREFIX = 'facet-';
+
+const CONTEXT_SELECTOR = '.wp-block-hm-facet-blocks-context';
+const ITEM_SELECTOR = '.wp-block-hm-facet-blocks-item';
 
 /**
  * Writes the selection to the URL, so a filtered view can be linked to and
@@ -34,7 +43,32 @@ function select( option ) {
 	const context = getContext();
 
 	context.selected[ context.facet ] = option;
+	// A new selection starts again from the first batch.
+	context.shown = context.limit;
 	syncUrl( context.selected );
+}
+
+/**
+ * Moves focus to an item of a context block, so a keyboard user carries on
+ * from the first item the show more button revealed. Without this, focus is
+ * lost when the button hides itself.
+ *
+ * @param {Element} root  The context block.
+ * @param {number}  index The item's position among the context's items.
+ */
+function focusItem( root, index ) {
+	// Items inside a nested context block belong to that one.
+	const item = Array.from( root.querySelectorAll( ITEM_SELECTOR ) ).filter(
+		( element ) => element.closest( CONTEXT_SELECTOR ) === root
+	)[ index ];
+
+	if ( ! item ) {
+		return;
+	}
+
+	item.setAttribute( 'tabindex', '-1' );
+	// The item is still hidden until the store's change reaches the page.
+	window.requestAnimationFrame( () => item.focus() );
 }
 
 // The derived state here has the same names as the closures in
@@ -42,9 +76,12 @@ function select( option ) {
 store( 'hm-facet-blocks', {
 	state: {
 		get isItemHidden() {
-			const { item, selected } = getContext();
+			const { item, index, items, selected, shown } = getContext();
 
-			return ! itemMatches( item, selected );
+			return (
+				! itemMatches( item, selected ) ||
+				! isWithinLimit( items, index, selected, shown )
+			);
 		},
 		get isOptionSelected() {
 			const { facet, option, selected } = getContext();
@@ -56,6 +93,11 @@ store( 'hm-facet-blocks', {
 
 			return hasResults( items, selected );
 		},
+		get hasMore() {
+			const { items, selected, shown } = getContext();
+
+			return hasMore( items, selected, shown );
+		},
 	},
 	actions: {
 		select() {
@@ -63,6 +105,18 @@ store( 'hm-facet-blocks', {
 		},
 		selectFromChange( event ) {
 			select( event.target.value );
+		},
+		showMore() {
+			const context = getContext();
+			const root = getElement().ref.closest( CONTEXT_SELECTOR );
+			const first = indexAtRank(
+				context.items,
+				context.selected,
+				context.shown
+			);
+
+			context.shown += context.limit;
+			focusItem( root, first );
 		},
 	},
 } );

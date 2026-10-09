@@ -30,7 +30,7 @@
 		},
 		{
 			"step": "runPHP",
-			"code": "<?php\nrequire_once '/wordpress/wp-load.php';\n\n// Keep the block markup exactly as the fixture has it.\nkses_remove_filters();\n\nwp_insert_post( [\n\t'post_type'    => 'page',\n\t'post_status'  => 'publish',\n\t'post_title'   => 'Facet blocks demo',\n\t'post_name'    => 'facet-blocks-demo',\n\t'post_content' => file_get_contents( '/wordpress/wp-content/plugins/hm-facet-blocks/tests/e2e/fixtures/demo.html' ),\n] );\n\nflush_rewrite_rules();"
+			"code": "<?php\nrequire_once '/wordpress/wp-load.php';\n\n// Keep the block markup exactly as the fixtures have it.\nkses_remove_filters();\n\n$pages = [\n\t'demo'   => 'Facet blocks demo',\n\t'limit'  => 'Facet blocks limit',\n\t'nested' => 'Facet blocks nested',\n];\n\nforeach ( $pages as $fixture => $title ) {\n\twp_insert_post( [\n\t\t'post_type'    => 'page',\n\t\t'post_status'  => 'publish',\n\t\t'post_title'   => $title,\n\t\t'post_name'    => sanitize_title( $title ),\n\t\t'post_content' => file_get_contents( \"/wordpress/wp-content/plugins/hm-facet-blocks/tests/e2e/fixtures/$fixture.html\" ),\n\t] );\n}\n\nflush_rewrite_rules();"
 		}
 	]
 }

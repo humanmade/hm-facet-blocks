@@ -12,10 +12,15 @@
 		"facets": {
 			"type": "array",
 			"default": []
+		},
+		"limit": {
+			"type": "integer",
+			"default": 0
 		}
 	},
 	"providesContext": {
-		"hm-facet-blocks/facets": "facets"
+		"hm-facet-blocks/facets": "facets",
+		"hm-facet-blocks/limit": "limit"
 	},
 	"supports": {
 		"html": false,

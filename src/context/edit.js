@@ -5,7 +5,7 @@ import {
 	useBlockProps,
 	useInnerBlocksProps,
 } from '@wordpress/block-editor';
-import { PanelBody } from '@wordpress/components';
+import { PanelBody, TextControl } from '@wordpress/components';
 import { useRegistry, useSelect } from '@wordpress/data';
 import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -79,7 +79,7 @@ function useItems( clientId ) {
 }
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { facets } = attributes;
+	const { facets, limit } = attributes;
 	const items = useItems( clientId );
 	const registry = useRegistry();
 
@@ -116,6 +116,31 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							setAttributes( { facets: next } )
 						}
 						updateItems={ updateItems }
+					/>
+				</PanelBody>
+				<PanelBody title={ __( 'Show more', 'hm-facet-blocks' ) }>
+					<TextControl
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+						type="number"
+						min={ 0 }
+						label={ __(
+							'Items to show at a time',
+							'hm-facet-blocks'
+						) }
+						help={ __(
+							'0 shows every item. With a limit, add a Facet show more block for the button that shows the next batch.',
+							'hm-facet-blocks'
+						) }
+						value={ limit }
+						onChange={ ( value ) =>
+							setAttributes( {
+								limit: Math.max(
+									0,
+									parseInt( value, 10 ) || 0
+								),
+							} )
+						}
 					/>
 				</PanelBody>
 			</InspectorControls>

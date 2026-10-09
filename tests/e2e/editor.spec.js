@@ -155,4 +155,29 @@ test.describe( 'Facet context editor', () => {
 			label: 'Healthcare & life sciences',
 		} );
 	} );
+
+	test( 'sets a limit, which the show more block needs', async ( {
+		page,
+		admin,
+		editor,
+	} ) => {
+		await openDemo( { page, admin, editor } );
+
+		const showMore = editor.canvas.locator(
+			'[data-type="hm-facet-blocks/show-more"]'
+		);
+
+		await expect( showMore ).toContainText(
+			'this button never appears on the front end'
+		);
+
+		await page.getByLabel( 'Items to show at a time' ).fill( '12' );
+
+		const [ context ] = await editor.getBlocks();
+
+		expect( context.attributes.limit ).toBe( 12 );
+		await expect(
+			showMore.getByRole( 'button', { name: 'Show more' } )
+		).toBeVisible();
+	} );
 } );
