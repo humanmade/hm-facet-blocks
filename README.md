@@ -75,7 +75,7 @@ Tabs, pills and similar looks are styles of the buttons display.
 
 ## Requirements
 
-- WordPress 6.9 or later
+- WordPress 7.1 or later
 - PHP 8.2 or later
 
 ## Development
