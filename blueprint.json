@@ -1,0 +1,36 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"landingPage": "/facet-blocks-demo/",
+	"preferredVersions": {
+		"php": "8.3",
+		"wp": "6.9"
+	},
+	"steps": [
+		{
+			"step": "login"
+		},
+		{
+			"step": "setSiteOptions",
+			"options": {
+				"blogname": "HM Facet Blocks",
+				"permalink_structure": "/%postname%/"
+			}
+		},
+		{
+			"step": "defineWpConfigConsts",
+			"consts": {
+				"WP_DEBUG": true,
+				"SCRIPT_DEBUG": true
+			}
+		},
+		{
+			"step": "activatePlugin",
+			"pluginPath": "hm-facet-blocks/hm-facet-blocks.php",
+			"pluginName": "HM Facet Blocks"
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php\nrequire_once '/wordpress/wp-load.php';\n\n// Keep the block markup exactly as the fixture has it.\nkses_remove_filters();\n\nwp_insert_post( [\n\t'post_type'    => 'page',\n\t'post_status'  => 'publish',\n\t'post_title'   => 'Facet blocks demo',\n\t'post_name'    => 'facet-blocks-demo',\n\t'post_content' => file_get_contents( '/wordpress/wp-content/plugins/hm-facet-blocks/tests/e2e/fixtures/demo.html' ),\n] );\n\nflush_rewrite_rules();"
+		}
+	]
+}
