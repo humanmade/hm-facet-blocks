@@ -3,7 +3,7 @@
  * Plugin Name:       HM Facet Blocks
  * Plugin URI:        https://github.com/humanmade/hm-facet-blocks
  * Description:       Blocks for filtering content already on the page by facets, such as a card grid filtered by industry.
- * Version:           __VERSION__
+ * Version:           0.1.0
  * Requires at least: 7.1
  * Requires PHP:      8.2
  * Author:            Human Made
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'HM_FACET_BLOCKS_VERSION', '__VERSION__' );
+define( 'HM_FACET_BLOCKS_VERSION', '0.1.0' );
 define( 'HM_FACET_BLOCKS_PATH', plugin_dir_path( __FILE__ ) );
 
 require_once HM_FACET_BLOCKS_PATH . 'inc/facets.php';

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "hm-facet-blocks/item",
+  "title": "Facet item",
+  "category": "design",
+  "icon": "tag",
+  "description": "Content that shows or hides with the facet controls. Tick the options it belongs to in the sidebar.",
+  "keywords": [
+    "filter",
+    "facet",
+    "group"
+  ],
+  "textdomain": "hm-facet-blocks",
+  "ancestor": [
+    "hm-facet-blocks/context"
+  ],
+  "usesContext": [
+    "hm-facet-blocks/facets"
+  ],
+  "attributes": {
+    "values": {
+      "type": "object",
+      "default": {}
+    }
+  },
+  "supports": {
+    "html": false,
+    "interactivity": true,
+    "layout": true,
+    "color": {
+      "background": true,
+      "text": true
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "blockGap": true
+    }
+  },
+  "editorScript": "file:./index.js"
+}

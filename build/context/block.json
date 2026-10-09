@@ -1,0 +1,51 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "hm-facet-blocks/context",
+  "title": "Facet context",
+  "category": "design",
+  "icon": "filter",
+  "description": "Holds a set of facets, the controls that filter on them and the items they filter.",
+  "keywords": [
+    "filter",
+    "facet",
+    "category"
+  ],
+  "textdomain": "hm-facet-blocks",
+  "attributes": {
+    "facets": {
+      "type": "array",
+      "default": []
+    },
+    "limit": {
+      "type": "integer",
+      "default": 0
+    }
+  },
+  "providesContext": {
+    "hm-facet-blocks/facets": "facets",
+    "hm-facet-blocks/limit": "limit"
+  },
+  "supports": {
+    "html": false,
+    "interactivity": true,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "layout": true,
+    "color": {
+      "background": true,
+      "text": true
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "blockGap": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScriptModule": "file:./view.js"
+}
