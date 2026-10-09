@@ -30,6 +30,18 @@ export function hasResults( items, selected ) {
 }
 
 /**
+ * Whether any facet has an option selected.
+ *
+ * Mirrors has_selection() in inc/facets.php.
+ *
+ * @param {Object<string, string>} selected Selected option slug by facet slug. An empty string means all.
+ * @return {boolean} Whether at least one facet is not on all.
+ */
+export function hasSelection( selected ) {
+	return Object.values( selected || {} ).some( Boolean );
+}
+
+/**
  * Whether an item is among the first matching items a context shows.
  *
  * Counts the matching items before it, in page order. Mirrors

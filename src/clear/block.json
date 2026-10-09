@@ -1,0 +1,31 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "hm-facet-blocks/clear",
+	"title": "Facet clear",
+	"category": "design",
+	"icon": "dismiss",
+	"description": "A button that sets every facet back to all. It only shows while an option is selected.",
+	"keywords": [ "filter", "facet", "clear", "reset" ],
+	"textdomain": "hm-facet-blocks",
+	"ancestor": [ "hm-facet-blocks/context" ],
+	"usesContext": [ "hm-facet-blocks/facets" ],
+	"attributes": {
+		"label": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false,
+		"interactivity": true,
+		"spacing": {
+			"margin": true
+		},
+		"typography": {
+			"fontSize": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css"
+}

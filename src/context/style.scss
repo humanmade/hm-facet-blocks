@@ -2,6 +2,9 @@
 // the browser's own `[hidden]` rule and leave a filtered-out item showing.
 .wp-block-hm-facet-blocks-item[hidden],
 .wp-block-hm-facet-blocks-no-results[hidden],
-.wp-block-hm-facet-blocks-show-more[hidden] {
+.wp-block-hm-facet-blocks-show-more[hidden],
+.wp-block-hm-facet-blocks-selection[hidden],
+.wp-block-hm-facet-blocks-selection__option[hidden],
+.wp-block-hm-facet-blocks-clear[hidden] {
 	display: none !important;
 }
