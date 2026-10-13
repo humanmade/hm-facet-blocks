@@ -3,6 +3,7 @@ import { getContext, getElement, store } from '@wordpress/interactivity';
 import {
 	hasMore,
 	hasResults,
+	hasSelection,
 	indexAtRank,
 	isWithinLimit,
 	itemMatches,
@@ -13,6 +14,9 @@ const QUERY_PREFIX = 'facet-';
 
 const CONTEXT_SELECTOR = '.wp-block-hm-facet-blocks-context';
 const ITEM_SELECTOR = '.wp-block-hm-facet-blocks-item';
+const CONTROL_SELECTOR =
+	'.wp-block-hm-facet-blocks-control__select, .wp-block-hm-facet-blocks-control__option';
+const SELECTION_SELECTOR = '.wp-block-hm-facet-blocks-selection__option';
 
 /**
  * Writes the selection to the URL, so a filtered view can be linked to and
@@ -71,6 +75,19 @@ function focusItem( root, index ) {
 	window.requestAnimationFrame( () => item.focus() );
 }
 
+/**
+ * Moves focus to the first control of a context block. A button that clears
+ * the selection hides itself, which would otherwise lose focus.
+ *
+ * @param {Element} root The context block.
+ */
+function focusControl( root ) {
+	// Controls inside a nested context block belong to that one.
+	Array.from( root.querySelectorAll( CONTROL_SELECTOR ) )
+		.find( ( element ) => element.closest( CONTEXT_SELECTOR ) === root )
+		?.focus();
+}
+
 // The derived state here has the same names as the closures in
 // register_state() in inc/blocks.php, which give the server-rendered values.
 store( 'hm-facet-blocks', {
@@ -98,6 +115,19 @@ store( 'hm-facet-blocks', {
 
 			return hasMore( items, selected, shown );
 		},
+		get hasSelection() {
+			return hasSelection( getContext().selected );
+		},
+		get isFacetSelected() {
+			const { facet, selected } = getContext();
+
+			return Boolean( selected[ facet ] );
+		},
+		get selectedLabel() {
+			const { facet, labels, selected } = getContext();
+
+			return labels?.[ selected[ facet ] ] || '';
+		},
 	},
 	actions: {
 		select() {
@@ -117,6 +147,34 @@ store( 'hm-facet-blocks', {
 
 			context.shown += context.limit;
 			focusItem( root, first );
+		},
+		clearFacet() {
+			const { ref } = getElement();
+			const root = ref.closest( CONTEXT_SELECTOR );
+			// The other selection buttons that are showing. This one is
+			// about to hide itself.
+			const next = Array.from(
+				ref.parentElement.querySelectorAll( SELECTION_SELECTOR )
+			).find( ( element ) => element !== ref && ! element.hidden );
+
+			select( '' );
+
+			if ( next ) {
+				next.focus();
+			} else {
+				focusControl( root );
+			}
+		},
+		clearAll() {
+			const context = getContext();
+			const root = getElement().ref.closest( CONTEXT_SELECTOR );
+
+			Object.keys( context.selected ).forEach( ( facet ) => {
+				context.selected[ facet ] = '';
+			} );
+			context.shown = context.limit;
+			syncUrl( context.selected );
+			focusControl( root );
 		},
 	},
 } );

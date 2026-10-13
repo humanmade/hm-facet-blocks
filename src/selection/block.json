@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "hm-facet-blocks/selection",
+	"title": "Facet selection",
+	"category": "design",
+	"icon": "tag",
+	"description": "Lists the selected option of each facet as a button that removes it.",
+	"keywords": [ "filter", "facet", "tags", "chips", "remove" ],
+	"textdomain": "hm-facet-blocks",
+	"ancestor": [ "hm-facet-blocks/context" ],
+	"usesContext": [ "hm-facet-blocks/facets" ],
+	"supports": {
+		"html": false,
+		"interactivity": true,
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"typography": {
+			"fontSize": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css"
+}

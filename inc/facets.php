@@ -161,6 +161,24 @@ function get_selected( array $facets, array $query ): array {
 }
 
 /**
+ * Whether any facet has an option selected.
+ *
+ * Mirrors hasSelection() in src/utils/matching.js.
+ *
+ * @param array $selected Selection from get_selected().
+ * @return bool
+ */
+function has_selection( array $selected ): bool {
+	foreach ( $selected as $option ) {
+		if ( $option !== '' ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Whether an item should show for a selection.
  *
  * Every facet with a selected option has to match, and an item matches a

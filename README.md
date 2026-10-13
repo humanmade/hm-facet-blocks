@@ -13,8 +13,10 @@ The items are ordinary blocks you write in the editor. Nothing is queried, so th
 | Facet item (`hm-facet-blocks/item`) | A container for any blocks. Shows or hides depending on what is selected. |
 | Facet no results (`hm-facet-blocks/no-results`) | A container that only shows when no item matches. |
 | Facet show more (`hm-facet-blocks/show-more`) | A button that shows the next batch of items, when the context block limits how many show at a time. |
+| Facet selection (`hm-facet-blocks/selection`) | Lists the selected option of each facet as a button that removes it. |
+| Facet clear (`hm-facet-blocks/clear`) | A button that sets every facet back to "All". |
 
-The control, item, no results and show more blocks can only be inserted inside a context block. Between them and the context you can use any layout blocks, for example Columns with the controls in one column and a Grid of items in the other.
+Every block but the context block can only be inserted inside a context block. Between them and the context you can use any layout blocks, for example Columns with the controls in one column and a Grid of items in the other.
 
 ## Setting it up
 
@@ -41,6 +43,14 @@ By default every matching item shows. To show them in batches:
 The first 12 matching items show, in page order. The button shows the next 12 and hides itself when none are left. Choosing a different option goes back to the first 12.
 
 Every item is still in the page, so the limit does not make the page smaller. How many items a visitor has revealed is not kept in the URL, so a reload or a shared link shows the first batch.
+
+## Showing and clearing what is selected
+
+Insert a Facet selection block to list what a visitor has chosen. It shows one button per facet that has an option selected, with the option's name, such as "Retail". Selecting the button sets that facet back to "All". A screen reader reads each one as "Remove Industry filter: Retail".
+
+Insert a Facet clear block for a button that sets every facet back to "All". Its label is "Clear all filters" unless you change it in the sidebar.
+
+Both blocks hide themselves while nothing is selected. Put them in a Row block to show them side by side.
 
 ## The URL
 
@@ -76,6 +86,9 @@ The control has plain default styles, each wrapped in `:where()` so a theme sele
 | `.wp-block-hm-facet-blocks-control__option[aria-pressed="true"]` | The selected button |
 | `.wp-block-hm-facet-blocks-control__select` | The dropdown |
 | `.wp-block-hm-facet-blocks-show-more__button` | The show more button |
+| `.wp-block-hm-facet-blocks-selection__option` | One selected option |
+| `.wp-block-hm-facet-blocks-selection__option::before` | The mark before a selected option, a multiplication sign by default |
+| `.wp-block-hm-facet-blocks-clear__button` | The clear button |
 
 Tabs, pills and similar looks are styles of the buttons display.
 

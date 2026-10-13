@@ -38,6 +38,8 @@ function register_blocks(): void {
 		'item'       => 'render_item',
 		'no-results' => 'render_no_results',
 		'show-more'  => 'render_show_more',
+		'selection'  => 'render_selection',
+		'clear'      => 'render_clear',
 	];
 
 	foreach ( $blocks as $directory => $callback ) {
@@ -144,6 +146,22 @@ function register_state(): void {
 				$context = wp_interactivity_get_context();
 
 				return has_more( $context['items'] ?? [], $context['selected'] ?? [], $context['shown'] ?? 0 );
+			},
+			'hasSelection'     => function (): bool {
+				$context = wp_interactivity_get_context();
+
+				return has_selection( $context['selected'] ?? [] );
+			},
+			'isFacetSelected'  => function (): bool {
+				$context = wp_interactivity_get_context();
+
+				return ( $context['selected'][ $context['facet'] ?? '' ] ?? '' ) !== '';
+			},
+			'selectedLabel'    => function (): string {
+				$context = wp_interactivity_get_context();
+				$option  = $context['selected'][ $context['facet'] ?? '' ] ?? '';
+
+				return (string) ( $context['labels'][ $option ] ?? '' );
 			},
 		]
 	);
@@ -256,6 +274,82 @@ function render_show_more( array $attributes ): string {
 	return sprintf(
 		'<div %1$s hidden><button type="button" class="wp-block-hm-facet-blocks-show-more__button wp-element-button" data-wp-on--click="actions.showMore">%2$s</button></div>',
 		get_block_wrapper_attributes( [ 'data-wp-bind--hidden' => '!state.hasMore' ] ),
+		esc_html( $label )
+	);
+}
+
+/**
+ * Renders the selection block: one button per facet, showing the facet's
+ * selected option and removing it when pressed.
+ *
+ * A button is rendered for every facet and hidden while its facet is on all,
+ * so choosing an option in the browser has a button to show.
+ *
+ * @param array    $attributes Block attributes.
+ * @param string   $content    Unused, the block has no inner content.
+ * @param WP_Block $block      Block instance.
+ * @return string
+ */
+function render_selection( array $attributes, string $content, WP_Block $block ): string {
+	$facets   = get_context_facets( $block );
+	$selected = get_request_selection( $facets );
+	$buttons  = '';
+
+	foreach ( $facets as $facet ) {
+		$labels = array_column( $facet['options'], 'label', 'slug' );
+		$option = $selected[ $facet['slug'] ];
+
+		$buttons .= sprintf(
+			'<button type="button" class="wp-block-hm-facet-blocks-selection__option" %1$s data-wp-on--click="actions.clearFacet" data-wp-bind--hidden="!state.isFacetSelected"%2$s><span class="screen-reader-text">%3$s </span><span data-wp-text="state.selectedLabel">%4$s</span></button>',
+			wp_interactivity_data_wp_context(
+				[
+					'facet'  => $facet['slug'],
+					// Cast so a facet with no options still encodes as an object.
+					'labels' => (object) $labels,
+				]
+			),
+			$option === '' ? ' hidden' : '',
+			esc_html(
+				sprintf(
+					/* translators: %s: facet name, such as "Industry". The selected option follows it. */
+					__( 'Remove %s filter:', 'hm-facet-blocks' ),
+					$facet['label']
+				)
+			),
+			esc_html( $labels[ $option ] ?? '' )
+		);
+	}
+
+	return sprintf(
+		'<div %1$s%2$s>%3$s</div>',
+		get_block_wrapper_attributes(
+			[
+				'role'                 => 'group',
+				'aria-label'           => __( 'Selected filters', 'hm-facet-blocks' ),
+				'data-wp-bind--hidden' => '!state.hasSelection',
+			]
+		),
+		has_selection( $selected ) ? '' : ' hidden',
+		$buttons
+	);
+}
+
+/**
+ * Renders the clear button, shown while any facet has an option selected.
+ *
+ * @param array    $attributes Block attributes.
+ * @param string   $content    Unused, the block has no inner content.
+ * @param WP_Block $block      Block instance.
+ * @return string
+ */
+function render_clear( array $attributes, string $content, WP_Block $block ): string {
+	$label = (string) ( $attributes['label'] ?? '' );
+	$label = $label !== '' ? $label : __( 'Clear all filters', 'hm-facet-blocks' );
+
+	return sprintf(
+		'<div %1$s%2$s><button type="button" class="wp-block-hm-facet-blocks-clear__button" data-wp-on--click="actions.clearAll">%3$s</button></div>',
+		get_block_wrapper_attributes( [ 'data-wp-bind--hidden' => '!state.hasSelection' ] ),
+		has_selection( get_request_selection( get_context_facets( $block ) ) ) ? '' : ' hidden',
 		esc_html( $label )
 	);
 }

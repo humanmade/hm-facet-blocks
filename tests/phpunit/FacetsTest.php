@@ -13,6 +13,7 @@ use function HM\FacetBlocks\find_facet;
 use function HM\FacetBlocks\get_selected;
 use function HM\FacetBlocks\has_more;
 use function HM\FacetBlocks\has_results;
+use function HM\FacetBlocks\has_selection;
 use function HM\FacetBlocks\is_within_limit;
 use function HM\FacetBlocks\item_matches;
 use function HM\FacetBlocks\sanitize_facets;
@@ -324,6 +325,22 @@ class FacetsTest extends TestCase {
 		$this->assertTrue( has_results( $items, [ 'industry' => 'retail' ] ) );
 		$this->assertFalse( has_results( $items, [ 'industry' => 'technology' ] ) );
 		$this->assertFalse( has_results( [], [ 'industry' => '' ] ) );
+	}
+
+	public function test_has_selection(): void {
+		$this->assertFalse(
+			has_selection( [
+				'industry'   => '',
+				'department' => '',
+			] )
+		);
+		$this->assertFalse( has_selection( [] ) );
+		$this->assertTrue(
+			has_selection( [
+				'industry'   => '',
+				'department' => 'legal',
+			] )
+		);
 	}
 
 	/**

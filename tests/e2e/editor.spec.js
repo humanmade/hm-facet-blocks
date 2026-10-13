@@ -180,4 +180,39 @@ test.describe( 'Facet context editor', () => {
 			showMore.getByRole( 'button', { name: 'Show more' } )
 		).toBeVisible();
 	} );
+
+	// fixtures/selection.html has a selection block and a clear block.
+	test( 'previews the selection and clear blocks', async ( {
+		page,
+		admin,
+		editor,
+	} ) => {
+		await page.goto( '/facet-blocks-selection/' );
+
+		const bodyClass = await page.locator( 'body' ).getAttribute( 'class' );
+
+		await admin.editPost( bodyClass.match( /page-id-(\d+)/ )[ 1 ] );
+
+		// Nothing is selected in the editor, so each facet's first option
+		// stands in.
+		await expect(
+			editor.canvas
+				.locator( '[data-type="hm-facet-blocks/selection"]' )
+				.getByRole( 'button' )
+		).toHaveText( [ 'Technology', 'Marketing' ] );
+
+		const clear = editor.canvas.locator(
+			'[data-type="hm-facet-blocks/clear"]'
+		);
+
+		await expect( clear.getByRole( 'button' ) ).toHaveText(
+			'Clear all filters'
+		);
+
+		await editor.selectBlocks( clear );
+		await editor.openDocumentSettingsSidebar();
+		await page.getByLabel( 'Button label' ).fill( 'Start again' );
+
+		await expect( clear.getByRole( 'button' ) ).toHaveText( 'Start again' );
+	} );
 } );

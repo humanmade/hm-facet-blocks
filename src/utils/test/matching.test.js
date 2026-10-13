@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
 	hasMore,
 	hasResults,
+	hasSelection,
 	indexAtRank,
 	isWithinLimit,
 	itemMatches,
@@ -53,6 +54,22 @@ describe( 'hasResults', () => {
 	it( 'is false when no item matches', () => {
 		expect( hasResults( items, { industry: 'finance' } ) ).toBe( false );
 		expect( hasResults( [], { industry: '' } ) ).toBe( false );
+	} );
+} );
+
+describe( 'hasSelection', () => {
+	it( 'is false while every facet is on all', () => {
+		expect( hasSelection( { industry: '', department: '' } ) ).toBe(
+			false
+		);
+		expect( hasSelection( {} ) ).toBe( false );
+		expect( hasSelection( undefined ) ).toBe( false );
+	} );
+
+	it( 'is true once any facet has an option', () => {
+		expect( hasSelection( { industry: '', department: 'legal' } ) ).toBe(
+			true
+		);
 	} );
 } );
 
