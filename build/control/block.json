@@ -1,0 +1,61 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "hm-facet-blocks/control",
+  "title": "Facet control",
+  "category": "design",
+  "icon": "filter",
+  "description": "Buttons or a dropdown that filter facet items by one facet.",
+  "keywords": [
+    "filter",
+    "facet",
+    "dropdown",
+    "tabs"
+  ],
+  "textdomain": "hm-facet-blocks",
+  "ancestor": [
+    "hm-facet-blocks/context"
+  ],
+  "usesContext": [
+    "hm-facet-blocks/facets"
+  ],
+  "attributes": {
+    "facet": {
+      "type": "string",
+      "default": ""
+    },
+    "display": {
+      "type": "string",
+      "enum": [
+        "buttons",
+        "select"
+      ],
+      "default": "buttons"
+    },
+    "allLabel": {
+      "type": "string",
+      "default": ""
+    },
+    "showLabel": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "interactivity": true,
+    "color": {
+      "background": true,
+      "text": true
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true
+    },
+    "typography": {
+      "fontSize": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "style": "file:./style-index.css"
+}
