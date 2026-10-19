@@ -27,3 +27,5 @@
 /blueprint.json export-ignore
 /README.md export-ignore
 /CHANGELOG.md export-ignore
+/AGENTS.md export-ignore
+/CLAUDE.md export-ignore

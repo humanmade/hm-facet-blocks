@@ -10,6 +10,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Facet selection block, which lists the selected option of each facet as a button that removes it.
 - Facet clear block, a button that sets every facet back to all.
+- `AGENTS.md` and `CLAUDE.md`, with the rules for pull requests and their screenshots.
+
+### Changed
+
+- The pull request template asks for before and after screenshots, side by side, for any visible change.
 
 ## [0.1.0] - 2026-10-09
 
