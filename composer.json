@@ -20,7 +20,7 @@
 	},
 	"require-dev": {
 		"humanmade/coding-standards": "^2.5",
-		"phpunit/phpunit": "^9.6"
+		"phpunit/phpunit": "^13.4"
 	},
 	"scripts": {
 		"lint": "phpcs",
